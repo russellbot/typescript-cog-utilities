@@ -1,0 +1,11 @@
+{
+  "generator-ts-np": {
+    "promptValues": {
+      "githubUsername": "run-crank",
+      "email": "voldemort@hogwarts.dementors",
+      "twitterUsername": "__call_me_Vol",
+      "fullName": "Automaton Marketing, Inc.",
+      "packageManager": "npm"
+    }
+  }
+}
