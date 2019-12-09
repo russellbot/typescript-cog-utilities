@@ -1,49 +1,25 @@
 import * as moment from 'moment';
 
-export function compare(
-  operator: string,
-  actualValue: string,
-  value: string,
-  field: string,
-) {
-  const operatorFailMessages: any = {
-    be: `Expected ${field} field to be ${value}, but it was actually ${actualValue}`,
-    notbe: `Expected ${field} field not to be ${value}, but it was also ${actualValue}`,
-    contain: `Expected ${field} field to contain ${value}, but it is not contained in ${actualValue}`,
-    notcontain: `Expected ${field} field not to contain ${value}, but it is contained in ${actualValue}`,
-    begreaterthan: `${field} field is expected to be greater than ${value}, but its value was ${actualValue}`,
-    belessthan: `${field} field is expected to be less than ${value}, but its value was ${actualValue}`,
-  };
-  const operatorSuccessMessages: any = {
-    be: `The ${field} field was set to ${value}, as expected`,
-    notbe: `The ${field} field was not set to ${value}, as expected`,
-    contain: `The ${field} field contains ${value}, as expected`,
-    notcontain: `The ${field} field does not contain ${value}, as expected`,
-    begreaterthan: `The ${field} field was greater than ${value}, as expected`,
-    belessthan: `The ${field} field was less than ${value}, as expected`,
-  };
-  try {
-    return compareValues(operator, actualValue, value)
-      ? {
-          message:
-            operatorSuccessMessages[operator.replace(/\s/g, '').toLowerCase()],
-          result: true,
-        }
-      : {
-          message:
-            operatorFailMessages[operator.replace(/\s/g, '').toLowerCase()],
-          result: false,
-        };
-  } catch (e) {
-    throw new Error(e);
-  }
-}
+export const operatorFailMessages: any = {
+  be: 'Expected %s field to be %s, but it was actually %s',
+  notbe: 'Expected %s field not to be %s, but it was also %s',
+  contain: 'Expected %s field to contain %s, but it is not contained in %s',
+  notcontain: 'Expected %s field not to contain %s, but it is contained in %s',
+  begreaterthan:
+    '%s field is expected to be greater than %s, but its value was %s',
+  belessthan: '%s field is expected to be less than %s, but its value was %s',
+};
 
-function compareValues(
-  operator: string,
-  actualValue: string,
-  value: string,
-): boolean {
+export const operatorSuccessMessages: any = {
+  be: 'The %s field was set to %s, as expected',
+  notbe: 'The %s field was not set to %s, as expected',
+  contain: 'The %s field contains %s, as expected',
+  notcontain: 'The %s field does not contain %s, as expected',
+  begreaterthan: 'The %s field was greater than %s, as expected',
+  belessthan: 'The %s field was less than %s, as expected',
+};
+
+export function compare(operator: string, actualValue: string, value: string) {
   const validOperators = [
     'be',
     'not be',
@@ -70,7 +46,7 @@ function compareValues(
         return parseFloat(actualValue) > parseFloat(value);
       } else {
         throw new Error(
-          `Couldn't check that ${actualValue} > ${value}. The ${operator} operator can only be used with numeric or date values.`,
+          `Couldn't check that %s > %s. The ${operator} operator can only be used with numeric or date values.'`,
         );
       }
     } else if (operator == 'be less than') {
@@ -80,7 +56,7 @@ function compareValues(
         return parseFloat(actualValue) < parseFloat(value);
       } else {
         throw new Error(
-          `Couldn't check that ${actualValue} < ${value}. The ${operator} operator can only be used with numeric or date values.`,
+          `Couldn't check that %s < %s. The ${operator} operator can only be used with numeric or date values.`,
         );
       }
     }
