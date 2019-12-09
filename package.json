@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "description": "Utility methods and functionality to be shared across all Cogs written in Typescript.",
   "homepage": "https://github.com/run-crank/typescript-cog-utilities#readme",
-  "main": "dist/src/index.js",
+  "main": "index.js",
   "typings": "dist/src/index.d.ts",
   "files": [
     "dist/src/*",
@@ -31,7 +31,9 @@
   "bugs": {
     "url": "https://github.com/run-crank/typescript-cog-utilities/issues"
   },
-  "dependencies": {},
+  "dependencies": {
+    "moment": "^2.24.0"
+  },
   "devDependencies": {
     "@types/chalk": "^2.2.0",
     "@types/jest": "^23.3.1",
