@@ -32,12 +32,13 @@ const PRETTIER_IGNORE = [
 ];
 
 const PRETTIER_CONFIG = {
-  trailingComma: 'all',
-  useTabs: false,
-  singleQuote: true,
-  tabWidth: 2,
-  semi: true,
-  printWidth: 80,
+  trailingComma: "all",
+	useTabs: false,
+	singleQuote: true,
+	quoteProps: "consistent",
+	tabWidth: 2,
+	semi: true,
+	printWidth: 200
 };
 
 // copy assets files from src to dist

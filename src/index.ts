@@ -1,3 +1,2 @@
-export function add(a: number, b: number) {
-  return a + b;
-}
+export * from './utils/compare';
+export * from './constants/errors';
