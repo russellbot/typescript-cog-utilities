@@ -38,7 +38,7 @@ export function compare(operator: string, actualValue: string, value: string) {
       } else if (!isNaN(Number(actualValue)) && !isNaN(Number(value))) {
         return parseFloat(actualValue) > parseFloat(value);
       } else {
-        throw new InvalidOperandError(operator);
+        throw new InvalidOperandError(operator, actualValue, value);
       }
     } else if (operator == 'be less than') {
       if (dateTimeFormat.test(actualValue) && dateTimeFormat.test(value)) {
@@ -46,7 +46,7 @@ export function compare(operator: string, actualValue: string, value: string) {
       } else if (!isNaN(Number(actualValue)) && !isNaN(Number(value))) {
         return parseFloat(actualValue) < parseFloat(value);
       } else {
-        throw new InvalidOperandError(operator);
+        throw new InvalidOperandError(operator, actualValue, value);
       }
     }
   } else {
