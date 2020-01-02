@@ -24,8 +24,8 @@ export function compare(operator: string, actualValue: string, value: string) {
   const dateTimeFormat = /\d{4}-\d{2}-\d{2}(?:.?\d{2}:\d{2}:\d{2})?/;
 
   operator = operator || '';
-  actualValue = actualValue || '';
-  value = value || '';
+  actualValue = actualValue === undefined || actualValue === null ? '' : actualValue;
+  value = value === undefined || value === null ? '' : value;
 
   if (validOperators.includes(operator.toLowerCase())) {
     if (operator == 'be') {
