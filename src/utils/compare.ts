@@ -28,15 +28,15 @@ export function compare(operator: string, actualValue: string, value: string) {
   value = value === undefined || value === null ? '' : value;
 
   if (validOperators.includes(operator.toLowerCase())) {
-    if (operator == 'be') {
+    if (operator.toLowerCase() == 'be') {
       return actualValue == value;
-    } else if (operator == 'not be') {
+    } else if (operator.toLowerCase() == 'not be') {
       return actualValue != value;
-    } else if (operator == 'contain') {
+    } else if (operator.toLowerCase() == 'contain') {
       return actualValue.toLowerCase().includes(value.toLowerCase());
-    } else if (operator == 'not contain') {
+    } else if (operator.toLowerCase() == 'not contain') {
       return !actualValue.toLowerCase().includes(value.toLowerCase());
-    } else if (operator == 'be greater than') {
+    } else if (operator.toLowerCase() == 'be greater than') {
       if (dateTimeFormat.test(actualValue) && dateTimeFormat.test(value)) {
         return moment(actualValue).isAfter(value);
       } else if (!isNaN(Number(actualValue)) && !isNaN(Number(value))) {
@@ -44,7 +44,7 @@ export function compare(operator: string, actualValue: string, value: string) {
       } else {
         throw new InvalidOperandError(operator, actualValue, value);
       }
-    } else if (operator == 'be less than') {
+    } else if (operator.toLowerCase() == 'be less than') {
       if (dateTimeFormat.test(actualValue) && dateTimeFormat.test(value)) {
         return moment(actualValue).isBefore(value);
       } else if (!isNaN(Number(actualValue)) && !isNaN(Number(value))) {
