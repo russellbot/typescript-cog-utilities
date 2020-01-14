@@ -2,6 +2,8 @@
 
 Utility methods and functionality to be shared across all Cogs written in Typescript.
 
+[![CircleCI](https://circleci.com/gh/run-crank/typescript-cog-utilities/tree/master.svg?style=svg)](https://circleci.com/gh/run-crank/typescript-cog-utilities/tree/master)
+
 [![npm](https://img.shields.io/npm/v/@run-crank/utilities.svg)](https://www.npmjs.com/package/@run-crank/utilities)
 <!-- [![Travis](https://img.shields.io/travis/run-crank/typescript-cog-utilities.svg)](https://travis-ci.org/run-crank/typescript-cog-utilities) -->
 
