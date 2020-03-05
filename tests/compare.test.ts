@@ -1,4 +1,4 @@
-import { compare } from '../src';
+import { compare } from '../src/utils/compare';
 
 describe('testing compare function', () => {
   describe('testing be and not be operator', () => {
@@ -26,6 +26,33 @@ describe('testing compare function', () => {
       const value = 'value';
       expect(compare(operator, actualValue, value)).toBe(true);
     });
+    describe('with boolean', () => {
+      test('compare be with boolean value should return true', () => {
+        const operator = 'be';
+        const actualValue = true;
+        const value = 'true';
+        expect(compare(operator, actualValue, value)).toBe(true);
+      });
+      test('compare be with boolean value should return false', () => {
+        const operator = 'be';
+        const actualValue = false;
+        const value = 'true';
+        expect(compare(operator, actualValue, value)).toBe(false);
+      });
+    });
+
+    describe('with null', () => {
+      test('compare be with null value should return true', () => {
+        const operator = 'be';
+        const value = 'null';
+        expect(compare(operator, null, value)).toBe(true);
+      });
+      test('compare be with null value should return false', () => {
+        const operator = 'be';
+        const value = 'anyValue';
+        expect(compare(operator, null, value)).toBe(false);
+      });
+    });
   });
 
   describe('testing contain and not contain operator', () => {
@@ -50,6 +77,12 @@ describe('testing compare function', () => {
     test('compare not contain should return true', () => {
       const operator = 'not contain';
       const actualValue = 'volue';
+      const value = 'val';
+      expect(compare(operator, actualValue, value)).toBe(true);
+    });
+    test('compare contain with object type value should return true', () => {
+      const operator = 'contain';
+      const actualValue = { anyKey: 'anyValue' };
       const value = 'val';
       expect(compare(operator, actualValue, value)).toBe(true);
     });

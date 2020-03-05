@@ -19,13 +19,13 @@ export const operatorSuccessMessages: any = {
   'be less than': 'The %s field was less than %s, as expected',
 };
 
-export function compare(operator: string, actualValue: string, value: string) {
+export function compare(operator: string, actualValue: any, value: string) {
   const validOperators = ['be', 'not be', 'contain', 'not contain', 'be greater than', 'be less than'];
   const dateTimeFormat = /\d{4}-\d{2}-\d{2}(?:.?\d{2}:\d{2}:\d{2})?/;
 
   operator = operator || '';
-  actualValue = actualValue === undefined || actualValue === null ? '' : actualValue;
-  value = value === undefined || value === null ? '' : value;
+  actualValue = this.stringifyValue(actualValue);
+  value = this.stringifyValue(value);
 
   if (validOperators.includes(operator.toLowerCase())) {
     if (operator.toLowerCase() == 'be') {
@@ -55,5 +55,13 @@ export function compare(operator: string, actualValue: string, value: string) {
     }
   } else {
     throw new UnknownOperatorError(operator);
+  }
+}
+
+export function stringifyValue(object: any) {
+  if (typeof object === 'object') {
+    return JSON.stringify(object);
+  } else {
+    return String(object);
   }
 }
