@@ -44,13 +44,25 @@ describe('testing compare function', () => {
     describe('with null', () => {
       test('compare be with null value should return true', () => {
         const operator = 'be';
-        const value: any = null;
+        const value: any = '';
         expect(compare(operator, null, value)).toBe(true);
       });
       test('compare be with null value should return false', () => {
         const operator = 'be';
         const value = 'anyValue';
         expect(compare(operator, null, value)).toBe(false);
+      });
+    });
+    describe('with undefined', () => {
+      test('compare be with undefined value should return true', () => {
+        const operator = 'be';
+        const value: any = '';
+        expect(compare(operator, undefined, value)).toBe(true);
+      });
+      test('compare be with undefined value should return false', () => {
+        const operator = 'be';
+        const value = 'anyValue';
+        expect(compare(operator, undefined, value)).toBe(false);
       });
     });
   });
