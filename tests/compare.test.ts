@@ -44,7 +44,7 @@ describe('testing compare function', () => {
     describe('with null', () => {
       test('compare be with null value should return true', () => {
         const operator = 'be';
-        const value = 'null';
+        const value: any = null;
         expect(compare(operator, null, value)).toBe(true);
       });
       test('compare be with null value should return false', () => {

@@ -59,10 +59,10 @@ export function compare(operator: string, actualValue: any, value: string) {
 }
 
 export function stringifyValue(object: any) {
-  if (typeof object === 'object') {
-    return JSON.stringify(object);
-  } else if (object === null || object === undefined) {
+  if (object === null || object === undefined) {
     return '';
+  } else if (typeof object === 'object') {
+    return JSON.stringify(object);
   } else {
     return String(object);
   }
