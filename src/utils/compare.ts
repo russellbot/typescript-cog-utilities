@@ -19,8 +19,8 @@ export const operatorSuccessMessages: any = {
   'be less than': 'The %s field was less than %s, as expected',
 };
 
-export function compare(operator: string, actualValue: any, value: string) {
-  const validOperators = ['be', 'not be', 'contain', 'not contain', 'be greater than', 'be less than'];
+export function compare(operator: string, actualValue: any, value: string = null) {
+  const validOperators = ['be', 'not be', 'contain', 'not contain', 'be greater than', 'be less than', 'be set', 'not be set'];
   const dateTimeFormat = /\d{4}-\d{2}-\d{2}(?:.?\d{2}:\d{2}:\d{2})?/;
 
   operator = operator || '';
@@ -52,6 +52,10 @@ export function compare(operator: string, actualValue: any, value: string) {
       } else {
         throw new InvalidOperandError(operator, actualValue, value);
       }
+    } else if (operator.toLowerCase() == 'be set') {
+      return actualValue != '';
+    } else if (operator.toLowerCase() == 'not be set') {
+      return actualValue == '';
     }
   } else {
     throw new UnknownOperatorError(operator);
