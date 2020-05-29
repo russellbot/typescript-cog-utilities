@@ -8,6 +8,8 @@ export const operatorFailMessages: any = {
   'not contain': 'Expected %s field not to contain %s, but it is contained in %s',
   'be greater than': '%s field is expected to be greater than %s, but its value was %s',
   'be less than': '%s field is expected to be less than %s, but its value was %s',
+  'be set': 'Expected %s field to be set, but it was not',
+  'not be set': 'Expected %s field not to be set, but it was actually set to %s',
 };
 
 export const operatorSuccessMessages: any = {
@@ -17,6 +19,8 @@ export const operatorSuccessMessages: any = {
   'not contain': 'The %s field does not contain %s, as expected',
   'be greater than': 'The %s field was greater than %s, as expected',
   'be less than': 'The %s field was less than %s, as expected',
+  'be set': '%s field was set, as expected',
+  'not be set': '%s field was not set, as expected',
 };
 
 export function compare(operator: string, actualValue: any, value: string = null) {
