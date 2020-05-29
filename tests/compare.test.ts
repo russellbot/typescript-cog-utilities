@@ -153,4 +153,59 @@ describe('testing compare function', () => {
       });
     });
   });
+  describe('testing be set and not be set', () => {
+    describe('with string', () => {
+      describe('be set', () => {
+        test('compare be set to non null/empty string should return true', () => {
+          const operator = 'be set';
+          const actualValue = 'anyValue';
+          expect(compare(operator, actualValue)).toBe(true);
+        });
+        test('compare be set to null should return false', () => {
+          const operator = 'be set';
+          const actualValue: string = null;
+          expect(compare(operator, actualValue)).toBe(false);
+        });
+        test('compare be set to empty string should return false', () => {
+          const operator = 'be set';
+          const actualValue = '';
+          expect(compare(operator, actualValue)).toBe(false);
+        });
+      });
+      describe('not be set', () => {
+        test('compare not be set to empty string should return true', () => {
+          const operator = 'not be set';
+          const actualValue = '';
+          expect(compare(operator, actualValue)).toBe(true);
+        });
+        test('compare not be set to null should return false', () => {
+          const operator = 'not be set';
+          const actualValue: string = null;
+          expect(compare(operator, actualValue)).toBe(true);
+        });
+        test('compare not be set to non null/empty string should return false', () => {
+          const operator = 'not be set';
+          const actualValue = 'anyValue';
+          expect(compare(operator, actualValue)).toBe(false);
+        });
+      });
+    });
+    describe('with numbers', () => {
+      test('compare be set to non 0 should return true', () => {
+        const operator = 'be set';
+        const actualValue = 12345;
+        expect(compare(operator, actualValue)).toBe(true);
+      });
+      test('compare be set to 0 should return true', () => {
+        const operator = 'be set';
+        const actualValue = '1999-01-02';
+        expect(compare(operator, actualValue)).toBe(true);
+      });
+      test('compare not be set to any number should return true', () => {
+        const operator = 'not be set';
+        const actualValue = 0;
+        expect(compare(operator, actualValue)).toBe(false);
+      });
+    });
+  });
 });
