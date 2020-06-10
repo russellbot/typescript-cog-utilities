@@ -1,5 +1,6 @@
 import { UnknownOperatorError, InvalidOperandError } from '../constants/errors';
 import * as moment from 'moment';
+import { parse as parseCsvString } from 'csv-string';
 
 export const operatorFailMessages: any = {
   'be': 'Expected %s field to be %s, but it was actually %s',
@@ -10,6 +11,8 @@ export const operatorFailMessages: any = {
   'be less than': '%s field is expected to be less than %s, but its value was %s',
   'be set': 'Expected %s field to be set, but it was not',
   'not be set': 'Expected %s field not to be set, but it was actually set to %s%s', // Note: %s%s is to ensure message is rendered with proper output; first %s is empty in this case.
+  'be one of': 'Expected %s field to be one of these values (%s), but it was actually %s',
+  'not be one of': 'Expected %s field to not be one of these values (%s), but it was actually %s',
 };
 
 export const operatorSuccessMessages: any = {
@@ -21,10 +24,12 @@ export const operatorSuccessMessages: any = {
   'be less than': 'The %s field was less than %s, as expected',
   'be set': '%s field was set, as expected',
   'not be set': '%s field was not set, as expected',
+  'be one of': '%s field was set to one of these values (%s), as expected',
+  'not be one of': '%s field was not set to one of these values (%s), as expected'
 };
 
 export function compare(operator: string, actualValue: any, value: string = null) {
-  const validOperators = ['be', 'not be', 'contain', 'not contain', 'be greater than', 'be less than', 'be set', 'not be set'];
+  const validOperators = ['be', 'not be', 'contain', 'not contain', 'be greater than', 'be less than', 'be set', 'not be set', 'be one of', 'not be one of'];
   const dateTimeFormat = /\d{4}-\d{2}-\d{2}(?:.?\d{2}:\d{2}:\d{2})?/;
 
   operator = operator || '';
@@ -60,6 +65,14 @@ export function compare(operator: string, actualValue: any, value: string = null
       return actualValue != '';
     } else if (operator.toLowerCase() == 'not be set') {
       return actualValue == '';
+    } else if (operator.toLowerCase() == 'be one of') {
+      return parseCsvString(value)[0]
+        .map(v => v.trim())
+        .includes(actualValue.trim());
+    } else if (operator.toLowerCase() == 'not be one of') {
+      return !parseCsvString(value)[0]
+        .map(v => v.trim())
+        .includes(actualValue.trim());
     }
   } else {
     throw new UnknownOperatorError(operator);
