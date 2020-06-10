@@ -208,4 +208,58 @@ describe('testing compare function', () => {
       });
     });
   });
+  describe('testing be one of and not be one of operators', () => {
+    describe('be one of', () => {
+      test('compare be one of with a single value should return true', () => {
+        const operator = 'be one of';
+        const actualValue = 'xyz';
+        const value = 'xyz';
+        expect(compare(operator, actualValue, value)).toBe(true);
+      });
+      test('compare be one of with comma-separated values should return true', () => {
+        const operator = 'be one of';
+        const actualValue = 'xyz';
+        const value = 'abc,jkl,xyz,sdf';
+        expect(compare(operator, actualValue, value)).toBe(true);
+      });
+      test('compare be one of with comma and space separated values should return true', () => {
+        const operator = 'be one of';
+        const actualValue = 'xyz';
+        const value = 'abc, jkl, xyz, sdf';
+        expect(compare(operator, actualValue, value)).toBe(true);
+      });
+      test('compare be one of with quoted comma-separated values should return true', () => {
+        const operator = 'be one of';
+        const actualValue = 'x, yz';
+        const value = '"a bc", jkl, "x, yz"';
+        expect(compare(operator, actualValue, value)).toBe(true);
+      });
+    });
+    describe('not be one of', () => {
+      test('compare not be one of with a single value should return true', () => {
+        const operator = 'not be one of';
+        const actualValue = 'xyz';
+        const value = 'abc';
+        expect(compare(operator, actualValue, value)).toBe(true);
+      });
+      test('compare not be one of with comma-separated values should return true', () => {
+        const operator = 'not be one of';
+        const actualValue = 'xyz';
+        const value = 'abc,jkl,opq,sdf';
+        expect(compare(operator, actualValue, value)).toBe(true);
+      });
+      test('compare not be one of with comma and space separated values should return true', () => {
+        const operator = 'not be one of';
+        const actualValue = 'xyz';
+        const value = 'abc, jkl, opq, sdf';
+        expect(compare(operator, actualValue, value)).toBe(true);
+      });
+      test('compare not be one of with quoted comma-separated values should return true', () => {
+        const operator = 'not be one of';
+        const actualValue = 'x, yz';
+        const value = '"a bc", jkl, "o, pq"';
+        expect(compare(operator, actualValue, value)).toBe(true);
+      });
+    });
+  });
 });
