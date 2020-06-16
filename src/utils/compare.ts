@@ -25,7 +25,7 @@ export const operatorSuccessMessages: any = {
   'be set': '%s field was set, as expected',
   'not be set': '%s field was not set, as expected',
   'be one of': '%s field was set to one of these values (%s), as expected',
-  'not be one of': '%s field was not set to one of these values (%s), as expected'
+  'not be one of': '%s field was not set to one of these values (%s), as expected',
 };
 
 export function compare(operator: string, actualValue: any, value: string = null) {
