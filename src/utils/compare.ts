@@ -10,7 +10,7 @@ export const operatorFailMessages: any = {
   'be greater than': '%s field is expected to be greater than %s, but its value was %s',
   'be less than': '%s field is expected to be less than %s, but its value was %s',
   'be set': 'Expected %s field to be set, but it was not',
-  'not be set': 'Expected %s field not to be set, but it was actually set to %s%s', // Note: %s%s is to ensure message is rendered with proper output; first %s is empty in this case.
+  'not be set': 'Expected %s field not to be set, but it was actually set to %s',
   'be one of': 'Expected %s field to be one of these values (%s), but it was actually %s',
   'not be one of': 'Expected %s field to not be one of these values (%s), but it was actually %s',
 };
