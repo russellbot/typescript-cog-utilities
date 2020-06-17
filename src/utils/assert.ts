@@ -1,9 +1,7 @@
 import * as moment from 'moment';
 import { parse as parseCsvString } from 'csv-string';
 
-import { InvalidOperandError } from '../constants/errors';
-
-export type Operator = 'be'|'not be'|'contain'|'not contain'|'be greater than'|'be less than'|'be set'|'not be set'|'be one of'|'not be one of';
+import { InvalidOperandError, UnknownOperatorError } from '../constants/errors';
 
 // tslint:disable-next-line:interface-name
 export interface AssertionResult {
@@ -11,9 +9,10 @@ export interface AssertionResult {
   message: string;
 }
 
+const VALID_OPERATORS = ['be', 'not be', 'contain', 'not contain', 'be greater than', 'be less than', 'be set', 'not be set', 'be one of', 'not be one of'];
 const DATE_TIME_FORMAT = /\d{4}-\d{2}-\d{2}(?:.?\d{2}:\d{2}:\d{2})?/;
 
-const COMPARERS = {
+const COMPARERS: Record<string, (actual: any, expected: any) => boolean> = {
   'be': (actual: any, expected: any) => actual == expected,
   'not be': (actual: any, expected: any) => actual != expected,
   'contain': (actual: any, expected: any) => !!actual.toLowerCase().includes(expected.toLowerCase()),
@@ -29,7 +28,7 @@ const COMPARERS = {
   },
   'be less than': (actual: any, expected: any) => {
     if (DATE_TIME_FORMAT.test(actual) && DATE_TIME_FORMAT.test(expected)) {
-      return moment(actual).isAfter(expected);
+      return moment(actual).isBefore(expected);
     } else if (!isNaN(Number(actual)) && !isNaN(Number(expected))) {
       return parseFloat(actual) < parseFloat(expected);
     } else {
@@ -44,45 +43,68 @@ const COMPARERS = {
     actual = [null, undefined].includes(actual) ? '' : actual;
     return actual == '';
   },
-  'be one of': (actual: any, expected: any) => !!parseCsvString(expected)[0].map(v => v.trim()).includes(actual.trim()),
-  'not be one of': (actual: any, expected: any) => !parseCsvString(expected)[0].map(v => v.trim()).includes(actual.trim()),
+  'be one of': (actual: any, expected: any) =>
+    !!parseCsvString(expected)[0]
+      .map(v => v.trim())
+      .includes(actual.trim()),
+  'not be one of': (actual: any, expected: any) =>
+    !parseCsvString(expected)[0]
+      .map(v => v.trim())
+      .includes(actual.trim()),
 };
 
-const SUCCESS_MESSAGES = {
-  'be': (field: string, actual: any, expected: any) => `Expected ${field} field to be ${expected}, but it was actually ${actual}`,
-  'not be': (field: string, actual: any, expected: any) => `Expected ${field} field not to be ${expected}, but it was also ${actual}`,
-  'contain': (field: string, actual: any, expected: any) => `Expected ${field} field to contain ${expected}, but it is not contained in ${actual}`,
-  'not contain': (field: string, actual: any, expected: any) => `Expected ${field} field not to contain ${expected}, but it is contained in ${actual}`,
-  'be greater than': (field: string, actual: any, expected: any) => `${field} field is expected to be greater than ${expected}, but its value was ${actual}`,
-  'be less than': (field: string, actual: any, expected: any) => `${field} field is expected to be less than ${expected}, but its value was ${actual}`,
-  'be set': (field: string, actual: any, expected: any) => `Expected ${field} field to be set, but it was not`,
-  'not be set': (field: string, actual: any, expected: any) => `Expected ${field} field not to be set, but it was actually set to ${actual}`,
-  'be one of': (field: string, actual: any, expected: any) => `Expected ${field} field to be one of these values (${expected}), but it was actually ${actual}`,
-  'not be one of': (field: string, actual: any, expected: any) => `Expected ${field} field to not be one of these values (${expected}), but it was actually ${actual}`,
+const SUCCESS_MESSAGES: Record<string, (actual: any, expected: any, field: string) => string> = {
+  'be': (actual: any, expected: any, field: string) => `Expected ${field} field to be ${expected}, but it was actually ${actual}`,
+  'not be': (actual: any, expected: any, field: string) => `Expected ${field} field not to be ${expected}, but it was also ${actual}`,
+  'contain': (actual: any, expected: any, field: string) => `Expected ${field} field to contain ${expected}, but it is not contained in ${actual}`,
+  'not contain': (actual: any, expected: any, field: string) => `Expected ${field} field not to contain ${expected}, but it is contained in ${actual}`,
+  'be greater than': (actual: any, expected: any, field: string) => `${field} field is expected to be greater than ${expected}, but its value was ${actual}`,
+  'be less than': (actual: any, expected: any, field: string) => `${field} field is expected to be less than ${expected}, but its value was ${actual}`,
+  'be set': (actual: any, expected: any, field: string) => `Expected ${field} field to be set, but it was not`,
+  'not be set': (actual: any, expected: any, field: string) => `Expected ${field} field not to be set, but it was actually set to ${actual}`,
+  'be one of': (actual: any, expected: any, field: string) => `Expected ${field} field to be one of these values (${expected}), but it was actually ${actual}`,
+  'not be one of': (actual: any, expected: any, field: string) => `Expected ${field} field to not be one of these values (${expected}), but it was actually ${actual}`,
 };
 
-const FAIL_MESSAGES = {
-  'be': (field: string, expected: any) => `The ${field} field was set to ${expected}, as expected`,
-  'not be': (field: string, expected: any) => `The ${field} field was not set to ${expected}, as expected`,
-  'contain': (field: string, expected: any) => `The ${field} field contains ${expected}, as expected`,
-  'not contain': (field: string, expected: any) => `The ${field} field does not contain ${expected}, as expected`,
-  'be greater than': (field: string, expected: any) => `The ${field} field was greater than ${expected}, as expected`,
-  'be less than': (field: string, expected: any) => `The ${field} field was less than ${expected}, as expected`,
-  'be set': (field: string, expected: any) => `${field} field was set, as expected`,
-  'not be set': (field: string, expected: any) => `${field} field was not set, as expected`,
-  'be one of': (field: string, expected: any) => `${field} field was set to one of these values (${expected}), as expected`,
-  'not be one of': (field: string, expected: any) => `${field} field was not set to one of these values (${expected}), as expected`,
+const FAIL_MESSAGES: Record<string, (expected: any, field: string) => string> = {
+  'be': (expected: any, field: string) => `The ${field} field was set to ${expected}, as expected`,
+  'not be': (expected: any, field: string) => `The ${field} field was not set to ${expected}, as expected`,
+  'contain': (expected: any, field: string) => `The ${field} field contains ${expected}, as expected`,
+  'not contain': (expected: any, field: string) => `The ${field} field does not contain ${expected}, as expected`,
+  'be greater than': (expected: any, field: string) => `The ${field} field was greater than ${expected}, as expected`,
+  'be less than': (expected: any, field: string) => `The ${field} field was less than ${expected}, as expected`,
+  'be set': (expected: any, field: string) => `${field} field was set, as expected`,
+  'not be set': (expected: any, field: string) => `${field} field was not set, as expected`,
+  'be one of': (expected: any, field: string) => `${field} field was set to one of these values (${expected}), as expected`,
+  'not be one of': (expected: any, field: string) => `${field} field was not set to one of these values (${expected}), as expected`,
 };
 
-export function assert(operator: Operator, field: string, actualValue: any, expectedValue: any): AssertionResult {
+export function assert(operator: string, actualValue: any, expectedValue: any, field: string): AssertionResult {
+  operator = operator ? operator.toLowerCase().trim() : '';
+  actualValue = stringifyValue(actualValue);
+  expectedValue = stringifyValue(expectedValue);
+
+  if (!VALID_OPERATORS.includes(operator)) {
+    throw new UnknownOperatorError(operator);
+  }
+
   const result: AssertionResult = {
-    valid: true,
+    valid: false,
     message: '',
   };
 
   result.valid = COMPARERS[operator](actualValue, expectedValue);
-  result.message = result.valid ? SUCCESS_MESSAGES[operator](field, actualValue, expectedValue)
-    : FAIL_MESSAGES[operator](field, expectedValue);
+  result.message = result.valid ? SUCCESS_MESSAGES[operator](actualValue, expectedValue, field) : FAIL_MESSAGES[operator](expectedValue, field);
 
   return result;
+}
+
+function stringifyValue(object: any) {
+  if (object === null || object === undefined) {
+    return '';
+  } else if (typeof object === 'object') {
+    return JSON.stringify(object);
+  } else {
+    return String(object);
+  }
 }

@@ -1,2 +1,2 @@
-export * from './utils/compare';
+export * from './utils';
 export * from './constants/errors';
