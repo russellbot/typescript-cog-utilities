@@ -53,7 +53,7 @@ const COMPARERS: Record<string, (actual: any, expected: any) => boolean> = {
       .includes(actual.trim()),
 };
 
-const SUCCESS_MESSAGES: Record<string, (actual: any, expected: any, field: string) => string> = {
+const FAIL_MESSAGES: Record<string, (actual: any, expected: any, field: string) => string> = {
   'be': (actual: any, expected: any, field: string) => `Expected ${field} field to be ${expected}, but it was actually ${actual}`,
   'not be': (actual: any, expected: any, field: string) => `Expected ${field} field not to be ${expected}, but it was also ${actual}`,
   'contain': (actual: any, expected: any, field: string) => `Expected ${field} field to contain ${expected}, but it is not contained in ${actual}`,
@@ -66,7 +66,7 @@ const SUCCESS_MESSAGES: Record<string, (actual: any, expected: any, field: strin
   'not be one of': (actual: any, expected: any, field: string) => `Expected ${field} field to not be one of these values (${expected}), but it was actually ${actual}`,
 };
 
-const FAIL_MESSAGES: Record<string, (expected: any, field: string) => string> = {
+const SUCCESS_MESSAGES: Record<string, (expected: any, field: string) => string> = {
   'be': (expected: any, field: string) => `The ${field} field was set to ${expected}, as expected`,
   'not be': (expected: any, field: string) => `The ${field} field was not set to ${expected}, as expected`,
   'contain': (expected: any, field: string) => `The ${field} field contains ${expected}, as expected`,
@@ -94,7 +94,7 @@ export function assert(operator: string, actualValue: any, expectedValue: any, f
   };
 
   result.valid = COMPARERS[operator](actualValue, expectedValue);
-  result.message = result.valid ? SUCCESS_MESSAGES[operator](actualValue, expectedValue, field) : FAIL_MESSAGES[operator](expectedValue, field);
+  result.message = result.valid ? SUCCESS_MESSAGES[operator](expectedValue, field) : FAIL_MESSAGES[operator](actualValue, expectedValue, field);
 
   return result;
 }
