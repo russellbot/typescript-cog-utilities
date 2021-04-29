@@ -98,6 +98,32 @@ describe('testing assert function', () => {
         expect(assert(operator, undefined, value, field).valid).toBe(false);
       });
     });
+    describe('with email', () => {
+      test('assert be with email value should return true', () => {
+        const operator = 'be';
+        const actualValue = 'TestEmail@Email.com';
+        const value = 'testemail@email.com';
+        expect(assert(operator, actualValue, value, field).valid).toBe(true);
+      });
+      test('assert be with email value should return false', () => {
+        const operator = 'be';
+        const actualValue = 'TestEmail@Email.com';
+        const value = 'nottestemail@email.com';
+        expect(assert(operator, actualValue, value, field).valid).toBe(false);
+      });
+      test('assert not be with email value should return true', () => {
+        const operator = 'not be';
+        const actualValue = 'TestEmail@Email.com';
+        const value = 'nottestemail@email.com';
+        expect(assert(operator, actualValue, value, field).valid).toBe(true);
+      });
+      test('assert not be with email value should return false', () => {
+        const operator = 'not be';
+        const actualValue = 'TestEmail@Email.com';
+        const value = 'testemail@email.com';
+        expect(assert(operator, actualValue, value, field).valid).toBe(false);
+      });
+    });
   });
 
   describe('testing contain and not contain operator', () => {
