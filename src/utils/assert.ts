@@ -11,10 +11,23 @@ export interface AssertionResult {
 
 const VALID_OPERATORS = ['be', 'not be', 'contain', 'not contain', 'be greater than', 'be less than', 'be set', 'not be set', 'be one of', 'not be one of'];
 const DATE_TIME_FORMAT = /\d{4}-\d{2}-\d{2}(?:.?\d{2}:\d{2}:\d{2})?/;
+const EMAIL_FORMAT = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 const COMPARERS: Record<string, (actual: any, expected: any) => boolean> = {
-  'be': (actual: any, expected: any) => actual == expected,
-  'not be': (actual: any, expected: any) => actual != expected,
+  'be': (actual: any, expected: any) => {
+    if (EMAIL_FORMAT.test(String(actual).toLowerCase()) && EMAIL_FORMAT.test(String(expected).toLowerCase())) {
+      actual = actual.toString().toLowerCase();
+      expected = expected.toString().toLowerCase();
+    }
+    return actual == expected;
+  },
+  'not be': (actual: any, expected: any) => {
+    if (EMAIL_FORMAT.test(String(actual).toLowerCase()) && EMAIL_FORMAT.test(String(expected).toLowerCase())) {
+      actual = actual.toString().toLowerCase();
+      expected = expected.toString().toLowerCase();
+    }
+    return actual != expected;
+  },
   'contain': (actual: any, expected: any) => !!actual.toLowerCase().includes(expected.toLowerCase()),
   'not contain': (actual: any, expected: any) => !actual.toLowerCase().includes(expected.toLowerCase()),
   'be greater than': (actual: any, expected: any) => {
